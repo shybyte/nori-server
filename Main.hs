@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 import Web.Scotty
+import Network.Wai.Middleware.Cors
 import System.Directory
 import Data.Monoid (mconcat)
 import Data.List
@@ -21,17 +22,19 @@ translateWord dict word = Map.findWithDefault "" (map toUpper word) dict
 main = do
     filep <- getCurrentDirectory
     print filep
-    dictSource <- readFile "data/cmudict.txt"
+    dictSource <- readFile "../data/cmudict.txt"
     let dictLines = lines dictSource
     let dict =  Map.fromList (map dictLineToEntryPair dictLines)
 
     scotty 3000 $ do
+      middleware simpleCors
       get "/phonemes/:sentence" $ do
           sentence <- param "sentence"
           --putStrLn ( "Searching for: " ++ sentence)
           let arphabetWords = map (translateWord dict) (words sentence)
           --print (joinNonEmpty arphabetWords)
           --(joinNonEmpty arphabetWords)
-          text  (T.pack (joinNonEmpty arphabetWords))
+          --text  (T.pack (joinNonEmpty arphabetWords))
+          json ([joinNonEmpty arphabetWords] :: [String])
 
 

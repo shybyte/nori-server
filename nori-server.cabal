@@ -22,6 +22,7 @@ executable nori-server
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.7
                      , scotty == 0.10.*
+                     , wai-cors
                      , directory
                      , containers
                      , text
