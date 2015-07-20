@@ -34,7 +34,7 @@ main = do
           let arphabetWords = map (translateWord dict) (words sentence)
           --print (joinNonEmpty arphabetWords)
           --(joinNonEmpty arphabetWords)
-          --text  (T.pack (joinNonEmpty arphabetWords))
-          json ([joinNonEmpty arphabetWords] :: [String])
+          text  (T.pack (joinNonEmpty arphabetWords))
+          -- json (joinNonEmpty arphabetWords :: String)
 
 
