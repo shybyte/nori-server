@@ -9,14 +9,16 @@ import qualified Data.Text.Lazy as T
 import qualified Data.Map as Map
 
 
-dictLineToEntryPair :: String -> (String, String)
+dictLineToEntryPair :: String -> (String, [String])
 dictLineToEntryPair line = (head ws, arphabet)
     where ws = words line
-          arphabet = filter isAlpha (intercalate "" (tail ws))
+          --arphabet = filter isAlpha (intercalate "" (tail ws))
+          arphabet = map (filter isAlpha)  (tail ws)
 
 joinNonEmpty words = unwords $ filter (not.null) words
 
-translateWord dict word = Map.findWithDefault "" (map toUpper word) dict
+translateWord :: Map.Map String [String] -> String -> [String]
+translateWord dict word = Map.findWithDefault [] (map toUpper word) dict
 
 
 main = do
@@ -34,7 +36,8 @@ main = do
           let arphabetWords = map (translateWord dict) (words sentence)
           --print (joinNonEmpty arphabetWords)
           --(joinNonEmpty arphabetWords)
-          text  (T.pack (joinNonEmpty arphabetWords))
-          -- json (joinNonEmpty arphabetWords :: String)
+          --text  (T.pack (joinNonEmpty arphabetWords))
+          --json (joinNonEmpty arphabetWords :: String)
+          json (arphabetWords :: [[String]])
 
 
