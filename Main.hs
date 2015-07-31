@@ -20,6 +20,8 @@ joinNonEmpty words = unwords $ filter (not.null) words
 translateWord :: Map.Map String [String] -> String -> [String]
 translateWord dict word = Map.findWithDefault [] (map toUpper word) dict
 
+translateWords dict words = map (translateWord dict) words
+
 
 main = do
     filep <- getCurrentDirectory
@@ -30,14 +32,14 @@ main = do
 
     scotty 3000 $ do
       middleware simpleCors
-      get "/phonemes/:sentence" $ do
-          sentence <- param "sentence"
-          --putStrLn ( "Searching for: " ++ sentence)
-          let arphabetWords = map (translateWord dict) (words sentence)
+      get "/phonemes/:text" $ do
+          inputText <- param "text"
+          --putStrLn ( "Searching for: " ++ inputText)
+          let arphabetWords = map (translateWords dict) (map words (lines inputText))
           --print (joinNonEmpty arphabetWords)
           --(joinNonEmpty arphabetWords)
           --text  (T.pack (joinNonEmpty arphabetWords))
           --json (joinNonEmpty arphabetWords :: String)
-          json (arphabetWords :: [[String]])
+          json (arphabetWords :: [[[String]]])
 
 
